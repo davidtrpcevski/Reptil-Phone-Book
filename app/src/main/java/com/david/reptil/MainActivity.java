@@ -1,13 +1,5 @@
 package com.david.reptil;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,26 +7,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
     private ArrayList<ExampleItem> mExampleList;
     private static final int REQUEST_CALL=1;
-    private int pozicija = 0;
-    private RecyclerView mRecyclerView;
+    private int callingPosition = 0;
     private ExampleAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-
-    private Button buttonInsert;
-    private Button buttonRemove;
-    private EditText editTextInsert;
-    private EditText editTextRemove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +32,6 @@ public class MainActivity extends AppCompatActivity{
 
         createExampleList();
         buildRecyclerView();
-    }
-
-    public void removeItem(int position) {
-        mExampleList.remove(position);
-        mAdapter.notifyItemRemoved(position);
-    }
-
-    public void changeItem(int position, String text) {
-        mExampleList.get(position).changeText1(text);
-        mAdapter.notifyItemChanged(position);
     }
 
     public void createExampleList() {
@@ -72,12 +51,13 @@ public class MainActivity extends AppCompatActivity{
         mExampleList.add(new ExampleItem(R.drawable.ic_android, "Рептил 13 - Маџари", "Ул. Спиро Црне бр.1", "Габи", "Нема", "070-382-882"));
         mExampleList.add(new ExampleItem(R.drawable.ic_android, "Рептил 14 - Лисиче", "Ул. 12-та Македонска Бригада Т.Ц. Лисиче","Јуле", "Нема", "071-373-512"));
         mExampleList.add(new ExampleItem(R.drawable.ic_android, "Рептил 15 - Зелен пазар", "Ул. 11 Октомври бр.16А","Маја","Нема", "072-807-245"));
+        mExampleList.add(new ExampleItem(R.drawable.ic_android, "Давид Трпчевски", "Ул. Февруарски Поход", "Давид", "Нема", "070-888-826"));
     }
 
     public void buildRecyclerView() {
-        mRecyclerView = findViewById(R.id.recyclerView);
+        RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mAdapter = new ExampleAdapter(mExampleList);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -97,9 +77,9 @@ public class MainActivity extends AppCompatActivity{
             }
 
             @Override
-            public void onDeleteClick(int position) {
+            public void onPhoneClick(int position) {
                 makePhoneCall(position);
-                pozicija=position;
+                callingPosition = position;
             }
         });
     }
@@ -122,14 +102,12 @@ public class MainActivity extends AppCompatActivity{
                 return false;
             }
         });
-
         return true;
     }
 
     private void makePhoneCall(int position) {
         String number = mExampleList.get(position).getMnumber2().replace("-","");
         if (number.trim().length() > 0) {
-
             if (ContextCompat.checkSelfPermission(MainActivity.this,
                     Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(MainActivity.this,
@@ -138,9 +116,8 @@ public class MainActivity extends AppCompatActivity{
                 String dial = "tel:" + number;
                 startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
             }
-
         } else {
-            Toast.makeText(MainActivity.this, "Enter Phone Number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Внеси го бројот!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -148,9 +125,9 @@ public class MainActivity extends AppCompatActivity{
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CALL) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                makePhoneCall(pozicija);
+                makePhoneCall(callingPosition);
             } else {
-                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Притисни ALLOW за да можеш да повикуваш броеви!", Toast.LENGTH_LONG).show();
             }
         }
     }

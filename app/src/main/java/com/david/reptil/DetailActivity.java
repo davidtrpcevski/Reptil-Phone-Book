@@ -23,10 +23,8 @@ public class DetailActivity extends AppCompatActivity {
             String number2 = getIntent().getStringExtra("number2");
             String liceName = getIntent().getStringExtra("lice_name");
 
-
         setDetails(storeName, streetName, number1, number2, liceName);
     }
-
 
     @SuppressLint("SetTextI18n")
     private void setDetails(String storeName, String streetName, String number1, String number2, String liceName){

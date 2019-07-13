@@ -8,7 +8,7 @@ public class ExampleItem {
     private String mnumber1;
     private String mnumber2;
 
-    public ExampleItem(int mImageResource, String mText1, String mText2, String mliceName, String mnumber1, String mnumber2) {
+    ExampleItem(int mImageResource, String mText1, String mText2, String mliceName, String mnumber1, String mnumber2) {
         this.mImageResource = mImageResource;
         this.mText1 = mText1;
         this.mText2 = mText2;
@@ -21,27 +21,27 @@ public class ExampleItem {
         mText1 = text;
     }
 
-    public int getImageResource() {
+    int getImageResource() {
         return mImageResource;
     }
 
-    public String getText1() {
+    String getText1() {
         return mText1;
     }
 
-    public String getText2() {
+    String getText2() {
         return mText2;
     }
 
-    public String getMliceName() {
+    String getMliceName() {
         return mliceName;
     }
 
-    public String getMnumber1() {
+    String getMnumber1() {
         return mnumber1;
     }
 
-    public String getMnumber2() {
+    String getMnumber2() {
         return mnumber2;
     }
 }
